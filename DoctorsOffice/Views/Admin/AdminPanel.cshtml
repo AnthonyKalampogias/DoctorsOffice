@@ -1,0 +1,88 @@
+﻿@model IEnumerable<DoctorsOffice.User>
+
+<h2>Admin Panel</h2>
+<h5>Select a button for what you want to do </h5>
+<style>
+    td, tr, th {
+        text-align: center;
+        padding: 15px;
+    }
+</style>
+<div class="userMessages">
+    <span style="font-size: 130%; text-align: center;">
+        <p style="color: white; background-color: cadetblue">@Session["message"]</p>
+        @{ Session["message"] = null; }
+    </span>
+</div>
+<p>
+    <table>
+        <tr>
+            <td>
+                <div class="popup">
+                    <a style="color: black" class="popuptext" href="~/Admin/CreateDoctor/">
+                        <button class="popuptext">Create a new Doctor</button>
+                    </a>
+                </div>
+            </td>
+            <td>
+                <div class="link">
+                    <a style="color: black" class="popuptext" href="~/Admin/CreatePatient/">
+                        <button class="popuptext">Create a new Patient</button>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    </table>
+</p>
+
+<table class="table">
+    <tr>
+        <th>
+            First Name
+        </th>
+        <th>
+            Last Name
+        </th>
+        <th>
+            Username
+        </th>
+        <th>
+            AMKA
+        </th>
+        <th>
+            Password
+        </th>
+        <th>
+            Type of User
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Username)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AMKA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.userType)
+            </td>
+            <td>
+                @Html.ActionLink("Delete", "DeleteUser", new { id = item.Id, usrType = item.userType })
+            </td>
+        </tr>
+    }
+
+</table>

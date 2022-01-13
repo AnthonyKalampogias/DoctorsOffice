@@ -1,0 +1,84 @@
+﻿
+@{
+    ViewBag.Title = "Doctor's Main page";
+    if (Session["id"] == null)
+    {
+        Session["message"] = "Please login or register in order to access the page";
+        Response.Redirect("~/UserAccess/Login/");
+    }
+}
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+</head>
+
+<h2>Welcome Doctor</h2>
+
+<h5>What would you like to do ?</h5>
+
+    @if (Session["docProfession"].ToString().Equals(""))
+    {
+        <script type="text/javascript">
+            $(function () {
+                $("#aModal").modal('show');
+            })
+        </script>
+    }
+<p>
+    <table>
+        <tr>
+            <td>
+                <div class="popup" style="padding-bottom: 15px;">
+                    <a style="color: black" class="popuptext" href="~/Doctor/GetAppointment">
+                        <button class="popuptext">Check appointment's</button>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="link" style="padding-bottom: 15px;">
+                    <a style="color: black" class="popuptext" href="~/Doctor/DoctorRegisterProfession/">
+                        <button class="popuptext">Change doctor profession </button>
+                    </a>
+                    @{
+                        var docsProfession = "";
+                        switch (Session["docProfession"])
+                        {
+                            case "orthopedikos":
+                                docsProfession = "Ορθοπαιδικός";
+                                break;
+                            case "ofthalmiatros":
+                                docsProfession = "Οφθαλμίατρος";
+                                break;
+                            case "pathologos":
+                                docsProfession = "Παθολόγος ";
+                                break;
+
+                        }
+                    }
+                    <span>Current profession @docsProfession</span>
+                </div>
+            </td>
+        </tr>
+    </table>
+</p>
+
+
+<div class="modal fade" id="aModal" tabindex="-1" role="dialog" aria-labelledby="aModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="aModalLabel">Warning</h4>
+            </div>
+            <div class="modal-body">
+                Looks like you have not register your doctors profession, please press OK to submit yours!
+            </div>
+            <div class="modal-footer" style="color: white">
+                <button style="color: white">@Html.ActionLink("OK", "DoctorRegisterProfession", "Doctor")</button>
+            </div>
+        </div>
+    </div>
+</div>

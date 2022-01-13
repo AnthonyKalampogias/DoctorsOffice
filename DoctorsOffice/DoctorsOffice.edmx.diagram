@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="382e5ac173b746e298b1546d9e3dff78" Name="Diagram1" ZoomLevel="98">
+        <EntityTypeShape EntityType="DoctorsOfficeModel.Admin" Width="1.5" PointX="3" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DoctorsOfficeModel.Doctor" Width="1.5" PointX="5.25" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DoctorsOfficeModel.Patient" Width="1.5" PointX="3" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DoctorsOfficeModel.User" Width="1.5" PointX="0.75" PointY="2.625" IsExpanded="true" />
+        <AssociationConnector Association="DoctorsOfficeModel.FK_Admins_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="DoctorsOfficeModel.FK_Doctors_Admins" ManuallyRouted="false" />
+        <AssociationConnector Association="DoctorsOfficeModel.FK_Doctors_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="DoctorsOfficeModel.FK_Patients_Users" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="DoctorsOfficeModel.Appointment" Width="1.5" PointX="5.375" PointY="5.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

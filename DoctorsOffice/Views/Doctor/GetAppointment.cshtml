@@ -1,0 +1,145 @@
+﻿@using System.Activities
+@model IEnumerable<DoctorsOffice.Appointment>
+<style>
+    td,tr,th {
+        text-align: center; 
+        padding: 15px;
+    }
+</style>
+
+@{
+    ViewBag.Title = "GetAppointment";
+    if (Session["id"] == null)
+    {
+        ViewData["error"] = "Please login or register in order to access the page";
+        Response.Redirect("~/UserAccess/Login/");
+    }
+}
+
+<h2>Welcome Doctor</h2>
+<h5>Below you will find all your scheduled appointments also insert new available hours for a new appointment</h5>
+
+<p>
+    <table>
+        <tr>
+            <td>
+                <div class="popup" onclick="Openform()">
+                    <button class="popuptext" id="myPopup">Add new available appointment</button>
+                </div>
+            </td>
+            <td>
+                <div class="popup">
+                    <a style="color: black" class="popuptext" href="~/Doctor/GetAppointment?selectDate=1">
+                        <button class="popuptext">Get Today's Appointments</button>
+                    </a>
+                </div>
+            </td>
+            <td>
+                <div class="link">
+                    <a style="color: black" class="popuptext" href="~/Doctor/GetAppointment?selectDate=2">
+                        <button class="popuptext">Get Week's Appointments</button>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    </table>
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Appointment Date
+        </th>
+        <th>
+            Start Time
+        </th>
+        <th>
+            End Time
+        </th>
+        <th>
+            Patients AMKA
+        </th>
+        <th>
+            Availability
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.date.Value.Date).ToString().Remove(10)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.startTime.Value.TimeOfDay)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.endTime.Value.TimeOfDay)
+            </td>
+            <td>
+                @if (item.patientAMKA == 0)
+                {
+                    <span>-</span>
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.patientAMKA)
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.isAvailable)
+            </td>
+            <td>
+                @Html.ActionLink("Delete", "DeleteAppointment", new { id=item.Id })
+            </td>
+        </tr>
+    }
+
+</table>
+<div class="userMessages">
+    <span style="font-size: 130%; text-align: center;">
+        <p style="color: white; background-color: cadetblue">@Session["message"]</p>
+        @{ Session["message"] = null; }
+    </span>
+</div>
+
+<div id="form1" style="display:none">
+    @using (Html.BeginForm("CreateNewAppointment", "Doctor"))
+    {
+        <br />
+        <br />
+        <h4>Create Appointment</h4>
+        <hr />
+        <div class="form-group">
+
+            <div class="col-md-10">
+                <label for="start">Date:</label><br>
+                <input type="datetime-local" name="date" id="date" required/> <br />
+            </div>
+            <br>
+
+            <div class="col-md-10">
+                <label for="PATIENTS_patientAMKA">Your AMKA:</label><br>
+                <input type="text" value="@Session["amka"]" readonly disabled><br>
+            </div><br>
+
+            <div class="col-md-10">
+                <label for="PATIENTS_patientAMKA">Patients AMKA (if known):</label><br>
+                <input style="width: 45%;" max="3112229999" type="number" id="patientsAMKA" name="patientsAMKA"><br>
+            </div>
+            <br>
+        </div>
+        <div class="col-md-10">
+            <br />
+            <input type="submit" value="Create" class="btn btn-default"/>
+            <input type="submit" onclick="javascript: location.reload(true);" value="Cancel" class="btn btn-default"/>
+        </div>
+    }
+</div>
+
+<script>
+    function Openform()
+    {
+        document.getElementById('form1').style.display = '';
+    }
+</script>
