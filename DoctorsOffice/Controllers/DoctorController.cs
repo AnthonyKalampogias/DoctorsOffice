@@ -5,6 +5,7 @@ using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web;
+using DoctorsOffice.Models;
 using System.Web.Mvc;
 
 namespace DoctorsOffice.Controllers
@@ -41,28 +42,31 @@ namespace DoctorsOffice.Controllers
         {
             try
             {
-                var appointments = new List<Appointment>();
                 var docsAMKA = Convert.ToInt32(Session["amka"]);
-                using (var db = new DoctorsOfficeEntities())
+                if (Singleton.Instance.GetList().Count == 0)
+                    Singleton.Instance.UpdateList(docsAMKA);
+                var appointments = new List<Appointment>();
+                
+                switch (selectDate)
                 {
-                    switch (selectDate)
-                    {
-                        case 1:
-                            appointments = db.Appointments.Where(
-                                ap => ap.doctorsAMKA == docsAMKA &&
-                                    ap.date >= DateTime.Now.AddHours(-23) &&
-                                    ap.date <= DateTime.Now.AddHours(7)
-                                ).ToList();
-                            break;
-                        case 2:
-                            appointments = db.Appointments.Where(ap => 
-                                ap.doctorsAMKA == docsAMKA
-                                && ap.date <= DateTime.Now.AddDays(7)).ToList();
-                            break;
-                        default:
-                            appointments = db.Appointments.Where(ap => ap.doctorsAMKA == docsAMKA).ToList();
-                            break;
-                    }
+                    case 1:
+                        appointments = Singleton.Instance.GetList().Where(
+                            ap => 
+                                ap.doctorsAMKA == docsAMKA &&
+                                ap.date == DateTime.Now.Date
+                        ).ToList();
+                        break;
+                    case 2:
+                        appointments = Singleton.Instance.GetList().Where(
+                                ap =>
+                                    ap.doctorsAMKA == docsAMKA &&
+                                    ap.date >= DateTime.Now.Date &&
+                                    ap.date <= DateTime.Now.Date.AddDays(7))
+                                .ToList();
+                        break;
+                    default:
+                        appointments = Singleton.Instance.GetList();
+                        break;
                 }
                 return View(appointments);
             }
@@ -82,7 +86,7 @@ namespace DoctorsOffice.Controllers
                     Session["message"] = "Please enter the date the appointment will be available!";
                     return RedirectToAction("GetAppointment", ViewBag);
                 }
-                else if (patientsAMKA != "" && patientsAMKA.Length < 10)
+                else if (patientsAMKA != "" && patientsAMKA.Length > 10)
                 {
                     Session["message"] = "Please enter a valid AMKA for your patient";
                     return RedirectToAction("GetAppointment");
@@ -90,17 +94,19 @@ namespace DoctorsOffice.Controllers
 
                 using (var db = new DoctorsOfficeEntities())
                 {
+                    var docsAMKA = Convert.ToInt32(Session["amka"]);
                     var app = new Appointment
                     {
                         date = date,
                         startTime = date,
                         endTime = date.AddHours(1),
                         patientAMKA = patientsAMKA != "" ? Convert.ToInt32(patientsAMKA) : 0,
-                        doctorsAMKA = Convert.ToInt32(Session["amka"]),
+                        doctorsAMKA = docsAMKA,
                         isAvailable = (patientsAMKA == "") // depends if patients amka has value
                     };
                     db.Appointments.Add(app);
                     db.SaveChanges();
+                    Singleton.Instance.UpdateList(docsAMKA);
                 }
                 Session["message"] = $"New appointment at {date} has been added successfully";
                 return RedirectToAction("GetAppointment");

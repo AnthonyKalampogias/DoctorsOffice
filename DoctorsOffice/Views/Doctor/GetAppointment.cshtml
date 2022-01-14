@@ -19,12 +19,36 @@
 <h2>Welcome Doctor</h2>
 <h5>Below you will find all your scheduled appointments also insert new available hours for a new appointment</h5>
 
+@{
+    var docsProfession = "";
+    switch (Session["docProfession"])
+    {
+        case "orthopedikos":
+            docsProfession = "Ορθοπαιδικός";
+            break;
+        case "ofthalmiatros":
+            docsProfession = "Οφθαλμίατρος";
+            break;
+        case "pathologos":
+            docsProfession = "Παθολόγος ";
+            break;
+
+    }
+}
+<h6>As a @docsProfession these are your available and reserved appointments</h6>
 <p>
     <table>
         <tr>
             <td>
                 <div class="popup" onclick="Openform()">
                     <button class="popuptext" id="myPopup">Add new available appointment</button>
+                </div>
+            </td>
+            <td>
+                <div class="popup">
+                    <a style="color: black" class="popuptext" href="~/Doctor/GetAppointment/">
+                        <button class="popuptext">All Appointments</button>
+                    </a>
                 </div>
             </td>
             <td>
@@ -101,6 +125,10 @@
         <p style="color: white; background-color: cadetblue">@Session["message"]</p>
         @{ Session["message"] = null; }
     </span>
+</div>
+
+<div>
+    @Html.ActionLink("Back to Main Page", "DoctorHomePage", "Doctor")
 </div>
 
 <div id="form1" style="display:none">

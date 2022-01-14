@@ -9,6 +9,8 @@ namespace DoctorsOffice.Controllers
 {
     public class AdminController : Controller
     {
+        private UserAccessController userAccessController = new UserAccessController();
+
         // GET: Admin
         public ActionResult AdminPanel()
         {
@@ -32,7 +34,6 @@ namespace DoctorsOffice.Controllers
                     return RedirectToAction("AdminPanel");
                 
                 user.type = "Patient";
-                var userAccessController = new UserAccessController();
                 var dbUser = userAccessController.CreateUser(user);
                 if (dbUser != null)
                     userAccessController.CreatePatient(dbUser);
@@ -58,7 +59,6 @@ namespace DoctorsOffice.Controllers
                     return RedirectToAction("AdminPanel");
 
                 doc.type = "Doctor";
-                var userAccessController = new UserAccessController();
                 var dbUser = userAccessController.CreateUser(doc);
                 if (dbUser != null)
                     userAccessController.CreateDoctor(dbUser, Convert.ToInt32(Session["AdminId"]));
