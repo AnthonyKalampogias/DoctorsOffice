@@ -61,7 +61,7 @@ namespace DoctorsOffice.Controllers
                 doc.type = "Doctor";
                 var dbUser = userAccessController.CreateUser(doc);
                 if (dbUser != null)
-                    userAccessController.CreateDoctor(dbUser, Convert.ToInt32(Session["AdminId"]));
+                    userAccessController.CreateDoctor(dbUser, SUser.Instance.GetInstance().adminID);
 
                 Session["message"] = $"Successfully added new doctor {dbUser.FirstName} {dbUser.LastName} to the database!";
             }

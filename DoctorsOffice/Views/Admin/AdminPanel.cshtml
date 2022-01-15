@@ -1,4 +1,15 @@
-﻿@model IEnumerable<DoctorsOffice.User>
+﻿@using DoctorsOffice.Models
+@model IEnumerable<DoctorsOffice.User>
+
+
+@{
+    ViewBag.Title = "Admins Main page";
+    if (SUser.Instance.GetInstance().Id == 0)
+    {
+        Session["message"] = "Please login or register in order to access the page";
+        Response.Redirect("~/UserAccess/Login/");
+    }
+}
 
 <h2>Admin Panel</h2>
 <h5>Select a button for what you want to do </h5>

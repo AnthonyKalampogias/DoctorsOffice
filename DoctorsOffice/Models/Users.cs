@@ -42,6 +42,10 @@ namespace DoctorsOffice.Models
         public string ConfirmPassword { get; set; }
 
         public string type { get; set; }
-        
+
+        // for special users
+        public string docProfession;
+        public int adminID;
+
     }
 }

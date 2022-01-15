@@ -1,12 +1,13 @@
-﻿@model DoctorsOffice.Doctor
+﻿@using DoctorsOffice.Models
+@model DoctorsOffice.Doctor
 
-@if (Session["id"] == null)
+@if (SUser.Instance.GetInstance().Id == 0)
 {
     ViewData["error"] = "Please login or register in order to access the page";
     Response.Redirect("~/UserAccess/Login/");
 }
 
-<h2>Welcome Doctor @Session["lname"]!</h2>
+<h2>Welcome Doctor @SUser.Instance.GetInstance().LastName !</h2>
 <h4>Please select your new speciality and click submit</h4>
 @{
     using (Html.BeginForm("DocSubmitProf", "Doctor"))

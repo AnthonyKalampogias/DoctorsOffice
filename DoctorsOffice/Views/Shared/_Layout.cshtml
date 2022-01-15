@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using DoctorsOffice.Models
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -20,12 +21,12 @@
             </div>
             <div class="navbar-collapse collapse" style="float:right">
                 <ul class="nav navbar-nav">
-                    @if (Session["id"] == null)
+                    @if (SUser.Instance.GetInstance().Id == 0)
                     {
                         <li>@Html.ActionLink("Login", "Login", "UserAccess")</li>
                         <li>@Html.ActionLink("Register", "Register", "UserAccess")</li>
                     }
-                    else if (Convert.ToInt32(Session["IsAdmin"]) == 1)
+                    else if (SUser.Instance.GetInstance().adminID != 0)
                     {
                         <li>
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -35,14 +36,14 @@
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 <li class="d">Welcome, Admin!</li>
-                                <li class="d">@Session["UserName"]</li>
+                                <li class="d">@SUser.Instance.GetInstance().Username</li>
                                 <li class="d">@Html.ActionLink("Logout", "Logout", "UserAccess")</li>
                             </ul>
                         </li>
                     }
                     else
                     {
-                        <li style="font-family: -webkit-pictograph; padding-left: 56px; color: white; " class="navbar-brand">Welcome, @Session["UserName"]</li>
+                        <li style="font-family: -webkit-pictograph; padding-left: 56px; color: white; " class="navbar-brand">Welcome, @SUser.Instance.GetInstance().Username</li>
                         <li style="padding-top: 2px; padding-bottom: 0px" class="navbar-brand">@Html.ActionLink("Logout", "Logout", "UserAccess")</li>
                     }
                 </ul>

@@ -25,14 +25,23 @@ namespace DoctorsOffice.Controllers
         {
             using (var db = new DoctorsOfficeEntities())
             {
-                var usrId = Convert.ToInt32(Session["id"]);
+                var usrId = SUser.Instance.GetInstance().Id;
                 var foundDoc = db.Doctors.FirstOrDefault(d => d.userId == usrId);
                 if (foundDoc != null)
                 {
                     foundDoc.Speciality = doc.Speciality;
-                    Session["userProfession"] = foundDoc.Speciality;
                     db.Doctors.AddOrUpdate(foundDoc);
                     db.SaveChanges();
+
+                    SUser.Instance.UpdateInstance(new Users
+                    {
+                        Id = SUser.Instance.GetInstance().Id,
+                        Username = SUser.Instance.GetInstance().Username,
+                        LastName = SUser.Instance.GetInstance().LastName,
+                        type = SUser.Instance.GetInstance().type,
+                        AMKA = SUser.Instance.GetInstance().AMKA,
+                        docProfession = foundDoc.Speciality
+                    });
                 }
             }
             return RedirectToAction("DoctorHomePage");
@@ -42,22 +51,22 @@ namespace DoctorsOffice.Controllers
         {
             try
             {
-                var docsAMKA = Convert.ToInt32(Session["amka"]);
-                if (Singleton.Instance.GetList().Count == 0)
-                    Singleton.Instance.UpdateList(docsAMKA);
+                var docsAMKA = Convert.ToInt32(SUser.Instance.GetInstance().AMKA);
+                if (SAppointments.Instance.GetInstance().Count == 0)
+                    SAppointments.Instance.UpdateList(docsAMKA);
                 var appointments = new List<Appointment>();
                 
                 switch (selectDate)
                 {
                     case 1:
-                        appointments = Singleton.Instance.GetList().Where(
+                        appointments = SAppointments.Instance.GetInstance().Where(
                             ap => 
                                 ap.doctorsAMKA == docsAMKA &&
                                 ap.date == DateTime.Now.Date
                         ).ToList();
                         break;
                     case 2:
-                        appointments = Singleton.Instance.GetList().Where(
+                        appointments = SAppointments.Instance.GetInstance().Where(
                                 ap =>
                                     ap.doctorsAMKA == docsAMKA &&
                                     ap.date >= DateTime.Now.Date &&
@@ -65,7 +74,7 @@ namespace DoctorsOffice.Controllers
                                 .ToList();
                         break;
                     default:
-                        appointments = Singleton.Instance.GetList();
+                        appointments = SAppointments.Instance.GetInstance();
                         break;
                 }
                 return View(appointments);
@@ -94,7 +103,7 @@ namespace DoctorsOffice.Controllers
 
                 using (var db = new DoctorsOfficeEntities())
                 {
-                    var docsAMKA = Convert.ToInt32(Session["amka"]);
+                    var docsAMKA = Convert.ToInt32(SUser.Instance.GetInstance().AMKA);
                     var app = new Appointment
                     {
                         date = date,
@@ -106,7 +115,7 @@ namespace DoctorsOffice.Controllers
                     };
                     db.Appointments.Add(app);
                     db.SaveChanges();
-                    Singleton.Instance.UpdateList(docsAMKA);
+                    SAppointments.Instance.UpdateList(docsAMKA);
                 }
                 Session["message"] = $"New appointment at {date} has been added successfully";
                 return RedirectToAction("GetAppointment");

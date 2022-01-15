@@ -1,7 +1,8 @@
-﻿
+﻿@using DoctorsOffice.Models
+
 @{
     ViewBag.Title = "Doctor's Main page";
-    if (Session["id"] == null)
+    if (SUser.Instance.GetInstance().Id == 0)
     {
         Session["message"] = "Please login or register in order to access the page";
         Response.Redirect("~/UserAccess/Login/");
@@ -18,7 +19,7 @@
 
 <h5>What would you like to do ?</h5>
 
-    @if (Session["docProfession"].ToString().Equals(""))
+    @if (SUser.Instance.GetInstance().docProfession == null)
     {
         <script type="text/javascript">
             $(function () {
@@ -45,7 +46,7 @@
                     </a>
                     @{
                         var docsProfession = "";
-                        switch (Session["docProfession"])
+                        switch (SUser.Instance.GetInstance().docProfession)
                         {
                             case "orthopedikos":
                                 docsProfession = "Ορθοπαιδικός";

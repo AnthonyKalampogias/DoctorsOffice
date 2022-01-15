@@ -31,31 +31,52 @@ namespace DoctorsOffice.Controllers
 
                 if (foundUser == null)
                     return RedirectToAction("Login");
-
-                // if there is a found user get the values to a session and redirect to appropriate page
-                Session["id"] = foundUser.Id;
-                Session["username"] = foundUser.Username;
-                Session["lname"] = foundUser.LastName ;
-                Session["usrType"] = foundUser.userType;
-                Session["amka"] = foundUser.AMKA;
+                
                 switch (foundUser.userType)
                 {
                     case "Doctor":
                     {
                         var docProf = db.Doctors.Where(d => d.userId == foundUser.Id).Select(d => d.Speciality).FirstOrDefault();
                         if (docProf != null)
-                            Session["docProfession"] = docProf;
-                        else
-                            Session["docProfession"] = "";
+                            SUser.Instance.UpdateInstance(new Users
+                            {
+                                Id = foundUser.Id,
+                                Username = foundUser.Username,
+                                LastName = foundUser.LastName,
+                                type = foundUser.userType,
+                                AMKA = foundUser.AMKA.ToString(),
+                                docProfession = docProf
+                            });
                         break;
                     }
                     case "Admin":
                     {
                         var AdminId = db.Admins.Where(a => a.userId == foundUser.Id).Select(a => a.Id).FirstOrDefault();
-                        Session["adminId"] = AdminId;
+                            if (AdminId != 0)
+                            {
+                                SUser.Instance.UpdateInstance(new Users
+                                {
+                                    Id = foundUser.Id,
+                                    Username = foundUser.Username,
+                                    LastName = foundUser.LastName,
+                                    type = foundUser.userType,
+                                    AMKA = foundUser.AMKA.ToString(),
+                                    adminID = AdminId
+                                }); 
+                            }
                         break;
                     }
                 }
+
+                if(SUser.Instance.GetInstance().Id == 0) // if no instance was created on the above switch
+                    SUser.Instance.UpdateInstance(new Users
+                    {
+                        Id = foundUser.Id,
+                        Username = foundUser.Username,
+                        LastName = foundUser.LastName,
+                        type = foundUser.userType,
+                        AMKA = foundUser.AMKA.ToString(),
+                    });
 
                 switch (foundUser.userType)
                 {
@@ -114,18 +135,17 @@ namespace DoctorsOffice.Controllers
         {
             try
             {
-                Session.Clear();
-                Session.Abandon();
+                SUser.Instance.LogoutInstance();
                 return RedirectToAction("Index", "Home");
             }
             catch (Exception e)
             {
-                ViewData["error"] = "Something went wrong!\nPlease try again..";
                 Console.WriteLine(e);
                 return RedirectToAction("Index", "Home");
             }
         }
 
+        #region User Creation Methods
         public User CreateUser(Users user)
         {
             try
@@ -214,6 +234,7 @@ namespace DoctorsOffice.Controllers
             {
                 Console.WriteLine(e);
             }
-        }
+        } 
+        #endregion
     }
 }

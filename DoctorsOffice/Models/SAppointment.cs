@@ -4,19 +4,19 @@ using System.Linq;
 
 namespace DoctorsOffice.Models
 {
-    class Singleton
+    class SAppointments
     {
         //Variable
-        private static Singleton instance;
+        private static SAppointments instance;
         private List<Appointment> dbAppointments;
 
         //Constructor
-        private Singleton() {
+        private SAppointments() {
             dbAppointments = new List<Appointment>();
         }
 
         //Property
-        public static Singleton Instance => instance ?? (instance = new Singleton());
+        public static SAppointments Instance => instance ?? (instance = new SAppointments());
 
         //Methods
         public void UpdateList(int docAMKA)
@@ -27,7 +27,7 @@ namespace DoctorsOffice.Models
             }
         }
 
-        public List<Appointment> GetList()
+        public List<Appointment> GetInstance()
         {
             return dbAppointments;
         }

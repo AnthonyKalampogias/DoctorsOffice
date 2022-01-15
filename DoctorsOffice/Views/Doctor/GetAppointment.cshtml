@@ -1,4 +1,5 @@
 ﻿@using System.Activities
+@using DoctorsOffice.Models
 @model IEnumerable<DoctorsOffice.Appointment>
 <style>
     td,tr,th {
@@ -9,7 +10,7 @@
 
 @{
     ViewBag.Title = "GetAppointment";
-    if (Session["id"] == null)
+    if (SUser.Instance.GetInstance().Id == 0)
     {
         ViewData["error"] = "Please login or register in order to access the page";
         Response.Redirect("~/UserAccess/Login/");
@@ -21,7 +22,7 @@
 
 @{
     var docsProfession = "";
-    switch (Session["docProfession"])
+    switch (SUser.Instance.GetInstance().docProfession)
     {
         case "orthopedikos":
             docsProfession = "Ορθοπαιδικός";
@@ -148,7 +149,7 @@
 
             <div class="col-md-10">
                 <label for="PATIENTS_patientAMKA">Your AMKA:</label><br>
-                <input type="text" value="@Session["amka"]" readonly disabled><br>
+                <input type="text" value="@SUser.Instance.GetInstance().AMKA" readonly disabled><br>
             </div><br>
 
             <div class="col-md-10">
