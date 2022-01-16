@@ -157,10 +157,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AppointmentDoctorView.cs" />
     <Compile Include="Models\SAppointment.cs" />
     <Compile Include="Models\SUser.cs" />
     <Compile Include="Models\Users.cs" />
-    <Compile Include="Models\ViewAppointments.cs" />
     <Compile Include="Patient.cs">
       <DependentUpon>DoctorsOffice.tt</DependentUpon>
     </Compile>
@@ -230,6 +230,7 @@
     <Content Include="Views\Admin\AdminPanel.cshtml" />
     <Content Include="Views\Admin\CreatePatient.cshtml" />
     <Content Include="Views\Admin\CreateDoctor.cshtml" />
+    <Content Include="Views\Patient\GetAppointment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,7 +1,7 @@
 ﻿@using DoctorsOffice.Models
 
 @{
-    ViewBag.Title = "PatientHomePage";
+    ViewBag.Title = "HomePage";
     if (SUser.Instance.GetInstance().Id == 0)
     {
         ViewData["error"] = "Please login or register in order to access the page";
@@ -9,15 +9,30 @@
     }
 }
 
+<style>
+    .PbtnLabels {
+        padding-right: 15px;
+        padding-bottom: 5px;
+        font-size: 120%
+    }
+</style>
+
 <h2>Welcome Mr/Mrs @SUser.Instance.GetInstance().LastName !</h2>
 <h5>What would you like to do ?</h5>
 
-<p>
-    <table>
+<p style="padding-top: 10px; padding-top: 10px">
+    <table style="text-align: center">
+        <tr>
+            <td class="PbtnLabels">
+                <label>Get an appointment with our doctors</label>
+            </td>
+            <td class="PbtnLabels">
+                <label>See you scheduled appointments</label>
+            </td>
+        </tr>            
         <tr>
             <td>
                 <div class="popup">
-                    <span>Get an appointment with our doctors</span>
                     <a style="color: black" class="popuptext" href="~/Patient/GetAppointment/">
                         <button class="popuptext">Enter</button>
                     </a>
@@ -25,7 +40,7 @@
             </td>
             <td>
                 <div class="link">
-                    <span>See you scheduled appointments</span>
+
                     <a style="color: black" class="popuptext" href="~/Patient/MyAppointments/">
                         <button class="popuptext">Enter</button>
                     </a>

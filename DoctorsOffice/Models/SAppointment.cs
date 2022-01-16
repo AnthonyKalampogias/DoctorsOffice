@@ -31,5 +31,10 @@ namespace DoctorsOffice.Models
         {
             return dbAppointments;
         }
+
+        public void DropInstance()
+        {
+            dbAppointments = new List<Appointment>();
+        }
     }
 }

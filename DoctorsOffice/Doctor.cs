@@ -14,13 +14,20 @@ namespace DoctorsOffice
     
     public partial class Doctor
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Doctor()
+        {
+            this.Appointments = new HashSet<Appointment>();
+        }
+    
         public int Id { get; set; }
-        public int doctorAMKA { get; set; }
+        public long doctorAMKA { get; set; }
         public string Speciality { get; set; }
         public Nullable<int> ADMIN_Id { get; set; }
         public int userId { get; set; }
     
-        public virtual Admin Admin { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Appointment> Appointments { get; set; }
         public virtual User User { get; set; }
     }
 }

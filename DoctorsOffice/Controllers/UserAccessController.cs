@@ -11,6 +11,7 @@ namespace DoctorsOffice.Controllers
     public class UserAccessController : Controller
     {
 
+        #region Login User
         public ActionResult Login()
         {
             return View();
@@ -31,27 +32,27 @@ namespace DoctorsOffice.Controllers
 
                 if (foundUser == null)
                     return RedirectToAction("Login");
-                
+
                 switch (foundUser.userType)
                 {
                     case "Doctor":
-                    {
-                        var docProf = db.Doctors.Where(d => d.userId == foundUser.Id).Select(d => d.Speciality).FirstOrDefault();
-                        if (docProf != null)
-                            SUser.Instance.UpdateInstance(new Users
-                            {
-                                Id = foundUser.Id,
-                                Username = foundUser.Username,
-                                LastName = foundUser.LastName,
-                                type = foundUser.userType,
-                                AMKA = foundUser.AMKA.ToString(),
-                                docProfession = docProf
-                            });
-                        break;
-                    }
+                        {
+                            var docProf = db.Doctors.Where(d => d.userId == foundUser.Id).Select(d => d.Speciality).FirstOrDefault();
+                            if (docProf != null)
+                                SUser.Instance.UpdateInstance(new Users
+                                {
+                                    Id = foundUser.Id,
+                                    Username = foundUser.Username,
+                                    LastName = foundUser.LastName,
+                                    type = foundUser.userType,
+                                    AMKA = foundUser.AMKA,
+                                    docProfession = docProf
+                                });
+                            break;
+                        }
                     case "Admin":
-                    {
-                        var AdminId = db.Admins.Where(a => a.userId == foundUser.Id).Select(a => a.Id).FirstOrDefault();
+                        {
+                            var AdminId = db.Admins.Where(a => a.userId == foundUser.Id).Select(a => a.Id).FirstOrDefault();
                             if (AdminId != 0)
                             {
                                 SUser.Instance.UpdateInstance(new Users
@@ -60,22 +61,22 @@ namespace DoctorsOffice.Controllers
                                     Username = foundUser.Username,
                                     LastName = foundUser.LastName,
                                     type = foundUser.userType,
-                                    AMKA = foundUser.AMKA.ToString(),
+                                    AMKA = foundUser.AMKA,
                                     adminID = AdminId
-                                }); 
+                                });
                             }
-                        break;
-                    }
+                            break;
+                        }
                 }
 
-                if(SUser.Instance.GetInstance().Id == 0) // if no instance was created on the above switch
+                if (SUser.Instance.GetInstance().Id == 0) // if no instance was created on the above switch
                     SUser.Instance.UpdateInstance(new Users
                     {
                         Id = foundUser.Id,
                         Username = foundUser.Username,
                         LastName = foundUser.LastName,
                         type = foundUser.userType,
-                        AMKA = foundUser.AMKA.ToString(),
+                        AMKA = foundUser.AMKA,
                     });
 
                 switch (foundUser.userType)
@@ -83,13 +84,14 @@ namespace DoctorsOffice.Controllers
                     case "Patient":
                         return RedirectToAction("PatientHomePage", "Patient");
                     case "Doctor":
-                        return RedirectToAction("DoctorHomePage","Doctor");
+                        return RedirectToAction("DoctorHomePage", "Doctor");
                     case "Admin":
                         return RedirectToAction("AdminPanel", "Admin");
                 }
             }
             return RedirectToAction("Index", "Home");
-        }
+        } 
+        #endregion
 
         #region Register
         public ActionResult Register()
@@ -135,7 +137,8 @@ namespace DoctorsOffice.Controllers
         {
             try
             {
-                SUser.Instance.LogoutInstance();
+                SUser.Instance.DropInstance();
+                SAppointments.Instance.DropInstance();
                 return RedirectToAction("Index", "Home");
             }
             catch (Exception e)
@@ -155,7 +158,7 @@ namespace DoctorsOffice.Controllers
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Username = user.Username,
-                    AMKA = Convert.ToInt32(user.AMKA),
+                    AMKA = user.AMKA,
                     Password = user.Password,
                     userType = user.type
                 };
@@ -184,8 +187,6 @@ namespace DoctorsOffice.Controllers
                     db.Patients.Add(new Patient
                     {
                         userId = dbUser.Id,
-                        Name = dbUser.FirstName,
-                        Surname = dbUser.LastName,
                         patientAMKA = dbUser.AMKA
                     });
                     db.SaveChanges();
@@ -225,7 +226,6 @@ namespace DoctorsOffice.Controllers
                     db.Admins.Add(new Admin()
                     {
                         userId = dbUser.Id,
-                        Username = dbUser.Username,
                     });
                     db.SaveChanges();
                 }

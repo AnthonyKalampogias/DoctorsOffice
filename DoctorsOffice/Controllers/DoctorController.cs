@@ -135,6 +135,8 @@ namespace DoctorsOffice.Controllers
                 {
                     db.Appointments.Remove(db.Appointments.FirstOrDefault(ap => ap.Id == id));
                     db.SaveChanges();
+                    var docsAMKA = Convert.ToInt32(SUser.Instance.GetInstance().AMKA);
+                    SAppointments.Instance.UpdateList(docsAMKA);
                 }
                 return RedirectToAction("GetAppointment");
             }

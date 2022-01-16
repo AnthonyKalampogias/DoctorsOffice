@@ -15,9 +15,7 @@ namespace DoctorsOffice
     public partial class Patient
     {
         public int Id { get; set; }
-        public int patientAMKA { get; set; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
+        public long patientAMKA { get; set; }
         public int userId { get; set; }
     
         public virtual User User { get; set; }

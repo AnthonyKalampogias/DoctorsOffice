@@ -10,7 +10,6 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Username" Type="varchar" MaxLength="50" />
           <Property Name="userId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Appointments">
@@ -18,11 +17,11 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="date" Type="datetime" />
+          <Property Name="date" Type="date" />
           <Property Name="startTime" Type="datetime" />
           <Property Name="endTime" Type="datetime" />
-          <Property Name="patientAMKA" Type="int" />
-          <Property Name="doctorsAMKA" Type="int" />
+          <Property Name="patientAMKA" Type="bigint" />
+          <Property Name="doctorsAMKA" Type="bigint" Nullable="false" />
           <Property Name="isAvailable" Type="bit" />
         </EntityType>
         <EntityType Name="Doctors">
@@ -30,7 +29,7 @@
             <PropertyRef Name="doctorAMKA" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="doctorAMKA" Type="int" Nullable="false" />
+          <Property Name="doctorAMKA" Type="bigint" Nullable="false" />
           <Property Name="Speciality" Type="varchar" MaxLength="50" />
           <Property Name="ADMIN_Id" Type="int" />
           <Property Name="userId" Type="int" Nullable="false" />
@@ -40,9 +39,7 @@
             <PropertyRef Name="patientAMKA" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="patientAMKA" Type="int" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="50" />
-          <Property Name="Surname" Type="varchar" MaxLength="50" />
+          <Property Name="patientAMKA" Type="bigint" Nullable="false" />
           <Property Name="userId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
@@ -53,7 +50,7 @@
           <Property Name="FirstName" Type="varchar" MaxLength="50" />
           <Property Name="LastName" Type="varchar" MaxLength="50" />
           <Property Name="Username" Type="varchar" MaxLength="50" />
-          <Property Name="AMKA" Type="int" Nullable="false" />
+          <Property Name="AMKA" Type="bigint" Nullable="false" />
           <Property Name="Password" Type="varchar" MaxLength="50" />
           <Property Name="userType" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
@@ -69,15 +66,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Doctors_Admins">
-          <End Role="Admins" Type="Self.Admins" Multiplicity="0..1" />
-          <End Role="Doctors" Type="Self.Doctors" Multiplicity="*" />
+        <Association Name="FK_Appointments_Doctors">
+          <End Role="Doctors" Type="Self.Doctors" Multiplicity="1" />
+          <End Role="Appointments" Type="Self.Appointments" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Admins">
-              <PropertyRef Name="Id" />
+            <Principal Role="Doctors">
+              <PropertyRef Name="doctorAMKA" />
             </Principal>
-            <Dependent Role="Doctors">
-              <PropertyRef Name="ADMIN_Id" />
+            <Dependent Role="Appointments">
+              <PropertyRef Name="doctorsAMKA" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -115,9 +112,9 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Admins" EntitySet="Admins" />
           </AssociationSet>
-          <AssociationSet Name="FK_Doctors_Admins" Association="Self.FK_Doctors_Admins">
-            <End Role="Admins" EntitySet="Admins" />
+          <AssociationSet Name="FK_Appointments_Doctors" Association="Self.FK_Appointments_Doctors">
             <End Role="Doctors" EntitySet="Doctors" />
+            <End Role="Appointments" EntitySet="Appointments" />
           </AssociationSet>
           <AssociationSet Name="FK_Doctors_Users" Association="Self.FK_Doctors_Users">
             <End Role="Users" EntitySet="Users" />
@@ -132,39 +129,74 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DoctorsOfficeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="DoctorsOfficeEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Admins" EntityType="DoctorsOfficeModel.Admin" />
+          <EntitySet Name="Appointments" EntityType="DoctorsOfficeModel.Appointment" />
+          <EntitySet Name="Doctors" EntityType="DoctorsOfficeModel.Doctor" />
+          <AssociationSet Name="FK_Appointments_Doctors" Association="DoctorsOfficeModel.FK_Appointments_Doctors">
+            <End Role="Doctor" EntitySet="Doctors" />
+            <End Role="Appointment" EntitySet="Appointments" />
+          </AssociationSet>
+          <EntitySet Name="Users" EntityType="DoctorsOfficeModel.User" />
+          <AssociationSet Name="FK_Admins_Users" Association="DoctorsOfficeModel.FK_Admins_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Admin" EntitySet="Admins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Doctors_Users" Association="DoctorsOfficeModel.FK_Doctors_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Doctor" EntitySet="Doctors" />
+          </AssociationSet>
+          <EntitySet Name="Patients" EntityType="DoctorsOfficeModel.Patient" />
+          <AssociationSet Name="FK_Patients_Users" Association="DoctorsOfficeModel.FK_Patients_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Patient" EntitySet="Patients" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="Admin">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="userId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Admins_Users" FromRole="Admins" ToRole="Users" />
-          <NavigationProperty Name="Doctors" Relationship="Self.FK_Doctors_Admins" FromRole="Admins" ToRole="Doctors" />
+          <NavigationProperty Name="User" Relationship="DoctorsOfficeModel.FK_Admins_Users" FromRole="Admin" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Appointment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="date" Type="DateTime" Precision="0" />
+          <Property Name="startTime" Type="DateTime" Precision="3" />
+          <Property Name="endTime" Type="DateTime" Precision="3" />
+          <Property Name="patientAMKA" Type="Int64" />
+          <Property Name="doctorsAMKA" Type="Int64" Nullable="false" />
+          <Property Name="isAvailable" Type="Boolean" />
+          <NavigationProperty Name="Doctor" Relationship="DoctorsOfficeModel.FK_Appointments_Doctors" FromRole="Appointment" ToRole="Doctor" />
         </EntityType>
         <EntityType Name="Doctor">
           <Key>
             <PropertyRef Name="doctorAMKA" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="doctorAMKA" Type="Int32" Nullable="false" />
+          <Property Name="doctorAMKA" Type="Int64" Nullable="false" />
           <Property Name="Speciality" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ADMIN_Id" Type="Int32" />
           <Property Name="userId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Admin" Relationship="Self.FK_Doctors_Admins" FromRole="Doctors" ToRole="Admins" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Doctors_Users" FromRole="Doctors" ToRole="Users" />
+          <NavigationProperty Name="Appointments" Relationship="DoctorsOfficeModel.FK_Appointments_Doctors" FromRole="Doctor" ToRole="Appointment" />
+          <NavigationProperty Name="User" Relationship="DoctorsOfficeModel.FK_Doctors_Users" FromRole="Doctor" ToRole="User" />
         </EntityType>
-        <EntityType Name="Patient">
-          <Key>
-            <PropertyRef Name="patientAMKA" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="patientAMKA" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Surname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="userId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Patients_Users" FromRole="Patients" ToRole="Users" />
-        </EntityType>
+        <Association Name="FK_Appointments_Doctors">
+          <End Type="DoctorsOfficeModel.Doctor" Role="Doctor" Multiplicity="1" />
+          <End Type="DoctorsOfficeModel.Appointment" Role="Appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doctor">
+              <PropertyRef Name="doctorAMKA" />
+            </Principal>
+            <Dependent Role="Appointment">
+              <PropertyRef Name="doctorsAMKA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="Id" />
@@ -173,96 +205,58 @@
           <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="AMKA" Type="Int32" Nullable="false" />
+          <Property Name="AMKA" Type="Int64" Nullable="false" />
           <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="userType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Admins" Relationship="Self.FK_Admins_Users" FromRole="Users" ToRole="Admins" />
-          <NavigationProperty Name="Doctors" Relationship="Self.FK_Doctors_Users" FromRole="Users" ToRole="Doctors" />
-          <NavigationProperty Name="Patients" Relationship="Self.FK_Patients_Users" FromRole="Users" ToRole="Patients" />
+          <Property Name="userType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Admins" Relationship="DoctorsOfficeModel.FK_Admins_Users" FromRole="User" ToRole="Admin" />
+          <NavigationProperty Name="Doctors" Relationship="DoctorsOfficeModel.FK_Doctors_Users" FromRole="User" ToRole="Doctor" />
+          <NavigationProperty Name="Patients" Relationship="DoctorsOfficeModel.FK_Patients_Users" FromRole="User" ToRole="Patient" />
         </EntityType>
         <Association Name="FK_Admins_Users">
-          <End Role="Users" Type="Self.User" Multiplicity="1" />
-          <End Role="Admins" Type="Self.Admin" Multiplicity="*" />
+          <End Type="DoctorsOfficeModel.User" Role="User" Multiplicity="1" />
+          <End Type="DoctorsOfficeModel.Admin" Role="Admin" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Users">
+            <Principal Role="User">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Admins">
+            <Dependent Role="Admin">
               <PropertyRef Name="userId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Doctors_Admins">
-          <End Role="Admins" Type="Self.Admin" Multiplicity="0..1" />
-          <End Role="Doctors" Type="Self.Doctor" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Admins">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Doctors">
-              <PropertyRef Name="ADMIN_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Doctors_Users">
-          <End Role="Users" Type="Self.User" Multiplicity="1" />
-          <End Role="Doctors" Type="Self.Doctor" Multiplicity="*" />
+          <End Type="DoctorsOfficeModel.User" Role="User" Multiplicity="1" />
+          <End Type="DoctorsOfficeModel.Doctor" Role="Doctor" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Users">
+            <Principal Role="User">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Doctors">
+            <Dependent Role="Doctor">
               <PropertyRef Name="userId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Patients_Users">
-          <End Role="Users" Type="Self.User" Multiplicity="1" />
-          <End Role="Patients" Type="Self.Patient" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Patients">
-              <PropertyRef Name="userId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="DoctorsOfficeEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Admins" EntityType="Self.Admin" />
-          <EntitySet Name="Doctors" EntityType="Self.Doctor" />
-          <EntitySet Name="Patients" EntityType="Self.Patient" />
-          <EntitySet Name="Users" EntityType="Self.User" />
-          <AssociationSet Name="FK_Admins_Users" Association="Self.FK_Admins_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Admins" EntitySet="Admins" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Doctors_Admins" Association="Self.FK_Doctors_Admins">
-            <End Role="Admins" EntitySet="Admins" />
-            <End Role="Doctors" EntitySet="Doctors" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Doctors_Users" Association="Self.FK_Doctors_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Doctors" EntitySet="Doctors" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Patients_Users" Association="Self.FK_Patients_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Patients" EntitySet="Patients" />
-          </AssociationSet>
-          <EntitySet Name="Appointments" EntityType="DoctorsOfficeModel.Appointment" />
-        </EntityContainer>
-        <EntityType Name="Appointment">
+        <EntityType Name="Patient">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="patientAMKA" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="date" Type="DateTime" Precision="3" />
-          <Property Name="startTime" Type="DateTime" Precision="3" />
-          <Property Name="endTime" Type="DateTime" Precision="3" />
-          <Property Name="patientAMKA" Type="Int32" />
-          <Property Name="doctorsAMKA" Type="Int32" />
-          <Property Name="isAvailable" Type="Boolean" />
+          <Property Name="patientAMKA" Type="Int64" Nullable="false" />
+          <Property Name="userId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="DoctorsOfficeModel.FK_Patients_Users" FromRole="Patient" ToRole="User" />
         </EntityType>
+        <Association Name="FK_Patients_Users">
+          <End Type="DoctorsOfficeModel.User" Role="User" Multiplicity="1" />
+          <End Type="DoctorsOfficeModel.Patient" Role="Patient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Patient">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -272,44 +266,8 @@
           <EntitySetMapping Name="Admins">
             <EntityTypeMapping TypeName="DoctorsOfficeModel.Admin">
               <MappingFragment StoreEntitySet="Admins">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="userId" ColumnName="userId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Doctors">
-            <EntityTypeMapping TypeName="DoctorsOfficeModel.Doctor">
-              <MappingFragment StoreEntitySet="Doctors">
                 <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="doctorAMKA" ColumnName="doctorAMKA" />
-                <ScalarProperty Name="Speciality" ColumnName="Speciality" />
-                <ScalarProperty Name="ADMIN_Id" ColumnName="ADMIN_Id" />
-                <ScalarProperty Name="userId" ColumnName="userId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Patients">
-            <EntityTypeMapping TypeName="DoctorsOfficeModel.Patient">
-              <MappingFragment StoreEntitySet="Patients">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="patientAMKA" ColumnName="patientAMKA" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Surname" ColumnName="Surname" />
-                <ScalarProperty Name="userId" ColumnName="userId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="DoctorsOfficeModel.User">
-              <MappingFragment StoreEntitySet="Users">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="Username" ColumnName="Username" />
-                <ScalarProperty Name="AMKA" ColumnName="AMKA" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="userType" ColumnName="userType" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -322,6 +280,39 @@
                 <ScalarProperty Name="endTime" ColumnName="endTime" />
                 <ScalarProperty Name="startTime" ColumnName="startTime" />
                 <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Doctors">
+            <EntityTypeMapping TypeName="DoctorsOfficeModel.Doctor">
+              <MappingFragment StoreEntitySet="Doctors">
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="ADMIN_Id" ColumnName="ADMIN_Id" />
+                <ScalarProperty Name="Speciality" ColumnName="Speciality" />
+                <ScalarProperty Name="doctorAMKA" ColumnName="doctorAMKA" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="DoctorsOfficeModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="userType" ColumnName="userType" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="AMKA" ColumnName="AMKA" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Patients">
+            <EntityTypeMapping TypeName="DoctorsOfficeModel.Patient">
+              <MappingFragment StoreEntitySet="Patients">
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="patientAMKA" ColumnName="patientAMKA" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -340,7 +331,7 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />

@@ -31,7 +31,7 @@ namespace DoctorsOffice.Models
             return user;
         }
 
-        public void LogoutInstance()
+        public void DropInstance()
         {
             user = new Users();
         }

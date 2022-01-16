@@ -26,24 +26,9 @@
                         <li>@Html.ActionLink("Login", "Login", "UserAccess")</li>
                         <li>@Html.ActionLink("Register", "Register", "UserAccess")</li>
                     }
-                    else if (SUser.Instance.GetInstance().adminID != 0)
-                    {
-                        <li>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <img src="/Content/source/account.jpg" style="width: 22px; height: 22px"> Your account
-
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li class="d">Welcome, Admin!</li>
-                                <li class="d">@SUser.Instance.GetInstance().Username</li>
-                                <li class="d">@Html.ActionLink("Logout", "Logout", "UserAccess")</li>
-                            </ul>
-                        </li>
-                    }
                     else
                     {
-                        <li style="font-family: -webkit-pictograph; padding-left: 56px; color: white; " class="navbar-brand">Welcome, @SUser.Instance.GetInstance().Username</li>
+                        <li style="font-family: -webkit-pictograph; padding-left: 56px; color: white; " class="navbar-brand">@SUser.Instance.GetInstance().Username</li>
                         <li style="padding-top: 2px; padding-bottom: 0px" class="navbar-brand">@Html.ActionLink("Logout", "Logout", "UserAccess")</li>
                     }
                 </ul>
@@ -54,7 +39,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Doctor's Office</p>
         </footer>
     </div>
 

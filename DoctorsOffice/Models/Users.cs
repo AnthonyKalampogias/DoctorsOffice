@@ -28,7 +28,7 @@ namespace DoctorsOffice.Models
 
         //Validation for AMKA
         [Display(Name = "AMKA")]
-        public string AMKA { get; set; }
+        public long AMKA { get; set; }
 
         [Required(ErrorMessage = "Please enter your password")]
         [DataType(DataType.Password)]

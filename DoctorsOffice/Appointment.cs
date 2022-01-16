@@ -18,8 +18,10 @@ namespace DoctorsOffice
         public Nullable<System.DateTime> date { get; set; }
         public Nullable<System.DateTime> startTime { get; set; }
         public Nullable<System.DateTime> endTime { get; set; }
-        public Nullable<int> patientAMKA { get; set; }
-        public Nullable<int> doctorsAMKA { get; set; }
+        public Nullable<long> patientAMKA { get; set; }
+        public long doctorsAMKA { get; set; }
         public Nullable<bool> isAvailable { get; set; }
+    
+        public virtual Doctor Doctor { get; set; }
     }
 }
