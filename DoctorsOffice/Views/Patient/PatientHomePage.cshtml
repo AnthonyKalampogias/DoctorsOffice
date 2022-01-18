@@ -29,12 +29,12 @@
             <td class="PbtnLabels">
                 <label>See you scheduled appointments</label>
             </td>
-        </tr>            
+        </tr>
         <tr>
             <td>
                 <div class="popup">
-                    <a style="color: black" class="popuptext" href="~/Patient/GetAppointment/">
-                        <button class="popuptext">Enter</button>
+                    <a style="color: black" class="popuptext">
+                        <button class="popuptext" onclick="findAppointment()">Enter</button>
                     </a>
                 </div>
             </td>
@@ -49,3 +49,28 @@
         </tr>
     </table>
 </p>
+
+<script type="text/javascript">
+    function findAppointment() {
+        document.getElementById('form1').style.display = '';
+    }
+</script>
+
+<div id="form1" style="display:none">
+<div class="modal-dialog" role="document" style="text-align: center;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" id="aModalLabel">Select a doctor you want to search for an Appointment</h4>
+        </div>
+        <div class="modal-body" style="color: black">
+            <a style="color: black " href="~/Patient/GetAppointment?queryDoc=pathologos"><button>Παθολόγος</button></a>
+        </div>
+        <div class="modal-body" style="color: black">
+            <a style="color: black" href="~/Patient/GetAppointment?queryDoc=ofthalmiatros"><button>Οφθαλμίατρος</button></a>
+        </div>
+        <div class="modal-body" style="color: black">
+            <a style="color: black" href="~/Patient/GetAppointment?queryDoc=orthopedikos"><button>Ορθοπαιδικός</button></a>
+        </div>
+    </div>
+</div>
+</div>

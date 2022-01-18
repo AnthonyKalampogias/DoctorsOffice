@@ -2,30 +2,62 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+<style>
+    td, tr, th {
+        text-align: center;
+        padding: 15px;
+    }
+</style>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
+<h2>Welcome to the Doctor's Office</h2>
+<h5 style="padding-bottom: 10px;">In order to use a user's type function you first must login !</h5>
+
+
+<div>
+    <table class="table">
+        <tr>
+            <th>
+                Patient
+            </th>
+            <th>
+                Doctor
+            </th>
+            <th>
+                Admin
+            </th>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("Patient Home Page", "PatientHomePage", "Patient")
+            </td>
+            <td>
+                @Html.ActionLink("Doctor Home Page", "DoctorHomePage", "Doctor")
+            </td>
+            <td>
+                @Html.ActionLink("Admin Home Page", "AdminPanel", "Admin")
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("Reserve an Appointment", "PatientHomePage", "Patient")
+            </td>
+            <td>
+                @Html.ActionLink("View all appointments", "GetAppointment", "Doctor")
+            </td>
+            <td>
+                @Html.ActionLink("Create Doctor", "CreateDoctor", "Admin")
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("See your reserved appointments", "MyAppointments", "Patient")
+            </td>
+            <td>
+                @Html.ActionLink("Change Doctor's Profession", "DoctorRegisterProfession", "Doctor")
+            </td>
+            <td>
+                @Html.ActionLink("Create patient", "CreatePatient", "Admin")
+            </td>
+        </tr>
+    </table>
 </div>

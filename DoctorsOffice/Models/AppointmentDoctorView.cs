@@ -12,7 +12,7 @@ namespace DoctorsOffice.Models
         public DateTime? date { get; set; }
         public DateTime? startTime { get; set; }
         public DateTime? endTime { get; set; }
-        public long doctorsAMKA { get; set; }
+        public long? userAMKA { get; set; }
         public bool? isAvailable { get; set; }
 
         public string Speciality { get; set; }
