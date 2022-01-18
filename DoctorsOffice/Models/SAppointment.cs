@@ -1,4 +1,5 @@
-﻿using DoctorsOffice;
+﻿using System;
+using DoctorsOffice;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,6 +26,7 @@ namespace DoctorsOffice.Models
             {
                 dbAppointments = db.Appointments.Where(ap => ap.doctorsAMKA == docAMKA).OrderBy(ob => ob.date).ToList();
             }
+            dbAppointments = dbAppointments.Where(ap => ap.date.Value.Date >= DateTime.Now.Date).ToList();
         }
 
         public List<Appointment> GetInstance()

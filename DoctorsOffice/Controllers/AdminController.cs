@@ -16,7 +16,7 @@ namespace DoctorsOffice.Controllers
         {
             using (var db = new DoctorsOfficeEntities())
             {
-                var modelData = db.Users.ToList();
+                var modelData = db.Users.Where(u => u.userType != "Admin").ToList();
                 return View(modelData); 
             }
         }
@@ -26,6 +26,7 @@ namespace DoctorsOffice.Controllers
             return View();
         }
 
+        //TODO below forms not working properly
         public ActionResult RegisterPatient(Users user)
         {
             try
