@@ -178,7 +178,7 @@ namespace DoctorsOffice.Controllers
             }
         }
 
-        public void CreatePatient(User dbUser)
+        public void CreatePatient(User dbUser, int? adminId = null)
         {
             try
             {
@@ -187,7 +187,8 @@ namespace DoctorsOffice.Controllers
                     db.Patients.Add(new Patient
                     {
                         userId = dbUser.Id,
-                        patientAMKA = dbUser.AMKA
+                        patientAMKA = dbUser.AMKA,
+                        ADMIN_ID = adminId
                     });
                     db.SaveChanges();
                 }

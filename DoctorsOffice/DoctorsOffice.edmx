@@ -41,6 +41,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="patientAMKA" Type="bigint" Nullable="false" />
           <Property Name="userId" Type="int" Nullable="false" />
+          <Property Name="ADMIN_ID" Type="int" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -244,6 +245,7 @@
           <Property Name="patientAMKA" Type="Int64" Nullable="false" />
           <Property Name="userId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="User" Relationship="DoctorsOfficeModel.FK_Patients_Users" FromRole="Patient" ToRole="User" />
+          <Property Name="ADMIN_ID" Type="Int32" />
         </EntityType>
         <Association Name="FK_Patients_Users">
           <End Type="DoctorsOfficeModel.User" Role="User" Multiplicity="1" />
@@ -311,6 +313,7 @@
           <EntitySetMapping Name="Patients">
             <EntityTypeMapping TypeName="DoctorsOfficeModel.Patient">
               <MappingFragment StoreEntitySet="Patients">
+                <ScalarProperty Name="ADMIN_ID" ColumnName="ADMIN_ID" />
                 <ScalarProperty Name="userId" ColumnName="userId" />
                 <ScalarProperty Name="patientAMKA" ColumnName="patientAMKA" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

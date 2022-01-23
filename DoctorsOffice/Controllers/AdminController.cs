@@ -26,7 +26,6 @@ namespace DoctorsOffice.Controllers
             return View();
         }
 
-        //TODO below forms not working properly
         public ActionResult RegisterPatient(Users user)
         {
             try
@@ -37,7 +36,7 @@ namespace DoctorsOffice.Controllers
                 user.type = "Patient";
                 var dbUser = userAccessController.CreateUser(user);
                 if (dbUser != null)
-                    userAccessController.CreatePatient(dbUser);
+                    userAccessController.CreatePatient(dbUser, SUser.Instance.GetInstance().adminID);
 
                 Session["message"] = $"Successfully added new patient {dbUser.FirstName} {dbUser.LastName} to the database!";
             }

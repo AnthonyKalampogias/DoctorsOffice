@@ -17,6 +17,7 @@ namespace DoctorsOffice
         public int Id { get; set; }
         public long patientAMKA { get; set; }
         public int userId { get; set; }
+        public Nullable<int> ADMIN_ID { get; set; }
     
         public virtual User User { get; set; }
     }
