@@ -9,8 +9,7 @@
     @Html.AntiForgeryToken()
 <div class="userMessages">
     <span style="font-size: 130%; text-align: center;">
-        <p style="color: white; background-color: cadetblue">@Session["message"]</p>
-        @{ Session["message"] = null; }
+        <p style="color: white; background-color: cadetblue">@ViewBag.message</p>
     </span>
 </div>
     <div class="form-horizontal">

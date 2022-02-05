@@ -28,13 +28,13 @@ namespace DoctorsOffice.Controllers
                         ap => ap.doctorsAMKA,
                         (d, ap) => new
                         {
-                            Id = ap.Id,
+                            ap.Id,
                             date = ap.date.Value,
                             startTime = ap.startTime.Value,
-                            Speciality = d.Speciality,
+                            d.Speciality,
                             endTime = ap.endTime.Value,
-                            doctorsAMKA = ap.doctorsAMKA,
-                            isAvailable = ap.isAvailable
+                            ap.doctorsAMKA,
+                            ap.isAvailable
                         }
                     ).Where(adv => adv.Speciality == queryDoc && adv.isAvailable == true).Join(db.Users,
                         av => av.doctorsAMKA,

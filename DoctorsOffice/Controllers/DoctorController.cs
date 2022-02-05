@@ -27,31 +27,31 @@ namespace DoctorsOffice.Controllers
             {
                 var usrId = SUser.Instance.GetInstance().Id;
                 var foundDoc = db.Doctors.FirstOrDefault(d => d.userId == usrId);
-                if (foundDoc != null)
-                {
-                    foundDoc.Speciality = doc.Speciality;
-                    db.Doctors.AddOrUpdate(foundDoc);
-                    db.SaveChanges();
+                if (foundDoc == null) return RedirectToAction("DoctorHomePage");
+                foundDoc.Speciality = doc.Speciality;
+                db.Doctors.AddOrUpdate(foundDoc);
+                db.SaveChanges();
 
-                    SUser.Instance.UpdateInstance(new Users
-                    {
-                        Id = SUser.Instance.GetInstance().Id,
-                        Username = SUser.Instance.GetInstance().Username,
-                        LastName = SUser.Instance.GetInstance().LastName,
-                        type = SUser.Instance.GetInstance().type,
-                        AMKA = SUser.Instance.GetInstance().AMKA,
-                        docProfession = foundDoc.Speciality
-                    });
-                }
+                SUser.Instance.UpdateInstance(new Users
+                {
+                    Id = SUser.Instance.GetInstance().Id,
+                    Username = SUser.Instance.GetInstance().Username,
+                    LastName = SUser.Instance.GetInstance().LastName,
+                    type = SUser.Instance.GetInstance().type,
+                    AMKA = SUser.Instance.GetInstance().AMKA,
+                    docProfession = foundDoc.Speciality
+                });
             }
             return RedirectToAction("DoctorHomePage");
         }
 
         public ActionResult GetAppointment(int? selectDate = null)
         {
+            if (TempData["message"] != null)
+                    ViewBag.message = TempData["message"];
             try
             {
-                var docsAMKA = Convert.ToInt32(SUser.Instance.GetInstance().AMKA);
+                var docsAMKA = Convert.ToInt64(SUser.Instance.GetInstance().AMKA);
                 if (SAppointments.Instance.GetInstance().Count == 0)
                     SAppointments.Instance.UpdateList(docsAMKA);
                 var appointments = new List<Appointment>();
@@ -92,24 +92,24 @@ namespace DoctorsOffice.Controllers
             {
                 if (date.Equals(null))
                 {
-                    Session["message"] = "Please enter the date the appointment will be available!";
+                    TempData["message"] = "Please enter the date the appointment will be available!";
                     return RedirectToAction("GetAppointment", ViewBag);
                 }
                 else if (patientsAMKA != "" && patientsAMKA.Length > 10)
                 {
-                    Session["message"] = "Please enter a valid AMKA for your patient";
+                    TempData["message"] = "Please enter a valid AMKA for your patient";
                     return RedirectToAction("GetAppointment");
                 }
 
                 using (var db = new DoctorsOfficeEntities())
                 {
-                    var docsAMKA = Convert.ToInt32(SUser.Instance.GetInstance().AMKA);
+                    var docsAMKA = Convert.ToInt64(SUser.Instance.GetInstance().AMKA);
                     var app = new Appointment
                     {
                         date = date,
                         startTime = date,
                         endTime = date.AddHours(1),
-                        patientAMKA = patientsAMKA != "" ? Convert.ToInt32(patientsAMKA) : 0,
+                        patientAMKA = patientsAMKA != "" ? Convert.ToInt64(patientsAMKA) : 0,
                         doctorsAMKA = docsAMKA,
                         isAvailable = (patientsAMKA == "") // depends if patients amka has value
                     };
@@ -117,12 +117,12 @@ namespace DoctorsOffice.Controllers
                     db.SaveChanges();
                     SAppointments.Instance.UpdateList(docsAMKA);
                 }
-                Session["message"] = $"New appointment at {date} has been added successfully";
+                TempData["message"] = $"New appointment at {date} has been added successfully";
                 return RedirectToAction("GetAppointment");
             }
             catch (Exception e)
             {
-                Session["message"] = $"Something went wrong!\n{e}";
+                TempData["message"] = $"Something went wrong!\n{e}";
                 return RedirectToAction("GetAppointment");
             }
         }
@@ -135,14 +135,14 @@ namespace DoctorsOffice.Controllers
                 {
                     db.Appointments.Remove(db.Appointments.FirstOrDefault(ap => ap.Id == id));
                     db.SaveChanges();
-                    var docsAMKA = Convert.ToInt32(SUser.Instance.GetInstance().AMKA);
+                    var docsAMKA = Convert.ToInt64(SUser.Instance.GetInstance().AMKA);
                     SAppointments.Instance.UpdateList(docsAMKA);
                 }
                 return RedirectToAction("GetAppointment");
             }
             catch (Exception e)
             {
-                Session["message"] = $"Something went wrong!\n{e}";
+                TempData["message"] = $"Something went wrong!\n{e}";
                 return RedirectToAction("GetAppointment", ViewBag);
             }
         }

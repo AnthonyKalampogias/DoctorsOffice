@@ -20,7 +20,7 @@ namespace DoctorsOffice.Models
         public static SAppointments Instance => instance ?? (instance = new SAppointments());
 
         //Methods
-        public void UpdateList(int docAMKA)
+        public void UpdateList(long docAMKA)
         {
             using(var db = new DoctorsOfficeEntities())
             {

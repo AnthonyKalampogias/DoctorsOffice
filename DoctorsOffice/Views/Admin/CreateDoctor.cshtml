@@ -5,7 +5,7 @@
     ViewBag.Title = "Create Doctor";
     if (SUser.Instance.GetInstance().Id == 0)
     {
-        Session["message"] = "Please login or register in order to access the page";
+        TempData["message"] = "Please login or register in order to access the page";
         Response.Redirect("~/UserAccess/Login/");
     }
 }

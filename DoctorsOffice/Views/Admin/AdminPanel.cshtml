@@ -6,7 +6,7 @@
     ViewBag.Title = "Admins Main page";
     if (SUser.Instance.GetInstance().Id == 0)
     {
-        Session["message"] = "Please login or register in order to access the page";
+        TempData["message"] = "Please login or register in order to access the page";
         Response.Redirect("~/UserAccess/Login/");
     }
 }
@@ -21,8 +21,7 @@
 </style>
 <div class="userMessages">
     <span style="font-size: 130%; text-align: center;">
-        <p style="color: white; background-color: cadetblue">@Session["message"]</p>
-        @{ Session["message"] = null; }
+        <p style="color: white; background-color: cadetblue">@ViewBag.message</p>
     </span>
 </div>
 <p>

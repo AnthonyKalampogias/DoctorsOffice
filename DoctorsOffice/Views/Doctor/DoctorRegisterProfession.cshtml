@@ -3,7 +3,7 @@
 
 @if (SUser.Instance.GetInstance().Id == 0)
 {
-    ViewData["error"] = "Please login or register in order to access the page";
+    TempData["message"] = "Please login or register in order to access the page";
     Response.Redirect("~/UserAccess/Login/");
 }
 

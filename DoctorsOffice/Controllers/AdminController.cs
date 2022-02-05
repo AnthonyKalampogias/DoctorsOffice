@@ -17,6 +17,8 @@ namespace DoctorsOffice.Controllers
             using (var db = new DoctorsOfficeEntities())
             {
                 var modelData = db.Users.Where(u => u.userType != "Admin").ToList();
+                if (TempData["message"] != null)
+                    ViewBag.message = TempData["message"];
                 return View(modelData); 
             }
         }
@@ -37,12 +39,12 @@ namespace DoctorsOffice.Controllers
                 var dbUser = userAccessController.CreateUser(user);
                 if (dbUser != null)
                     userAccessController.CreatePatient(dbUser, SUser.Instance.GetInstance().adminID);
-
-                Session["message"] = $"Successfully added new patient {dbUser.FirstName} {dbUser.LastName} to the database!";
+                
+                TempData["message"] = $"Successfully added new patient {dbUser.FirstName} {dbUser.LastName} to the database!";
             }
             catch (Exception e)
             {
-                Session["message"] = $"Something went wrong... Please try again<br>{e}";
+                TempData["message"] = $"Something went wrong... Please try again<br>{e}";
             }
             return RedirectToAction("AdminPanel");
         }
@@ -63,11 +65,11 @@ namespace DoctorsOffice.Controllers
                 if (dbUser != null)
                     userAccessController.CreateDoctor(dbUser, SUser.Instance.GetInstance().adminID);
 
-                Session["message"] = $"Successfully added new doctor {dbUser.FirstName} {dbUser.LastName} to the database!";
+                TempData["message"] = $"Successfully added new doctor {dbUser.FirstName} {dbUser.LastName} to the database!";
             }
             catch (Exception e)
             {
-                Session["message"] = $"Something went wrong... Please try again<br>{e}";
+                TempData["message"] = $"Something went wrong... Please try again<br>{e}";
             }
             return RedirectToAction("AdminPanel");
         }
@@ -91,7 +93,7 @@ namespace DoctorsOffice.Controllers
                 db.Users.Remove(db.Users.FirstOrDefault(u => u.Id == id));
                 db.SaveChanges();
             }
-            Session["message"] = $"Successfully deleted {usrType} with Id {id} from the database!";
+            TempData["message"] = $"Successfully deleted {usrType} with Id {id} from the database!";
             return RedirectToAction("AdminPanel");
         }
     }

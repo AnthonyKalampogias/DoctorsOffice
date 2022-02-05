@@ -14,6 +14,8 @@ namespace DoctorsOffice.Controllers
         #region Login User
         public ActionResult Login()
         {
+            if (TempData["message"] != null)
+                ViewBag.message = TempData["message"];
             return View();
         }
 
@@ -96,6 +98,8 @@ namespace DoctorsOffice.Controllers
         #region Register
         public ActionResult Register()
         {
+            if (TempData["message"] != null)
+                ViewBag.message = TempData["message"];
             return View();
         }
 
@@ -103,8 +107,8 @@ namespace DoctorsOffice.Controllers
         {
             try
             {
-                if (user.Username == null)
-                    return RedirectToAction("Login");
+                if (user.Username == null || user.AMKA.ToString().Length >= 12)
+                    return RedirectToAction("Register");
 
                 var dbUser = CreateUser(user);
                 if (dbUser.Id == 0) return RedirectToAction("Login");
@@ -126,7 +130,7 @@ namespace DoctorsOffice.Controllers
             }
             catch (Exception e)
             {
-                Session["message"] = $"Something went wrong!\nPlease try again..<br>{e}";
+                TempData["message"] = $"Something went wrong!\nPlease try again..<br>{e}";
                 Console.WriteLine(e);
                 return RedirectToAction("Register");
             }
